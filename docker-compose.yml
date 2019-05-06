@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  nginx:
+    build: docker/host/.
+    ports:
+      - '8888:80'
+    volumes:
+      - ./public:/code/public:ro
+      - ./docker/host/nginx:/etc/nginx/conf.d
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+
+  app:
+    build: .
+    volumes:
+      - .:/code
+      - ./docker/php/config/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    working_dir: /code
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: compsearch
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
+  elastic-data:

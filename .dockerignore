@@ -1,0 +1,11 @@
+bin/
+docker/
+tests/
+.idea/
+docker-compose.yml
+Dockerrun.aws.json
+Jenkinsfile
+phpunit.xml
+README.md
+spawn.sh
+.phpunit.result.cache

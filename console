@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+require '/code/vendor/autoload.php';
+
+use Elasticsearch\Client;
+use Room\Search\SearchApp;
+use Room\Search\Commands\DataImportCommand;
+use Room\Search\Commands\DbInitCommand;
+use Symfony\Component\Console\Application as ConsoleApplication;
+
+const ROOT_PATH = __DIR__;
+
+require 'vendor/autoload.php';
+
+$app = new SearchApp();
+$container = $app->getContainer();
+$db = $container->get(PDO::class);
+$console = new ConsoleApplication();
+$console->add(new DbInitCommand($db));
+$console->add(new DataImportCommand($db, $container->get(Client::class)));
+$console->run();
